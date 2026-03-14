@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anas Shahin — CV</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL
+═══════════════════════════════════════════════════════════ */
+:root{
+  --deep:#06101C;--navy:#0B1F38;--blue:#1A5C96;--accent:#29A0E0;--cyan:#00C9D4;
+  --gold:#C8911A;--gold-lt:#F5C842;--white:#FFF;--muted:#5C7A96;--border:#1D3A58;
+  --card:rgba(11,31,56,.65);--r:12px;
+  --green:#22C55E;--orange:#F59E0B;--red:#EF4444;--purple:#A78BFA;
+  --dash-bg:#0A1828;--dash-sidebar:#080F1A;--dash-border:#152338;
+  --dash-card:rgba(8,20,40,.8);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--deep);color:#B8CFE8;min-height:100vh;overflow-x:hidden}
+body.ar{font-family:'Cairo',sans-serif;direction:rtl}
+a{color:inherit;text-decoration:none}
+input,textarea,select,button{font-family:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--deep)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ═══════════════════════════════════════════════════════════
+   LOGIN SCREEN
+═══════════════════════════════════════════════════════════ */
+#login-screen{
+  position:fixed;inset:0;z-index:9999;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(10px);
+}
+#login-screen.open{display:flex;}
+.login-box{
+  position:relative;z-index:1;
+  background:#0B1F38;
+  border:1px solid rgba(41,160,224,.25);border-radius:20px;
+  padding:44px 40px;width:100%;max-width:420px;
+  box-shadow:0 40px 80px rgba(0,0,0,.7);
+}
+.login-box-close{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  color:var(--muted);font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .18s;
+}
+.login-box-close:hover{border-color:var(--red);color:var(--red)}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo .avatar{
+  width:72px;height:72px;border-radius:50%;margin:0 auto 14px;
+  background:linear-gradient(135deg,var(--gold),var(--cyan));
+  padding:2px;display:flex;align-items:center;justify-content:center;
+  animation:glow 4s ease-in-out infinite;
+}
+.login-logo .avatar-in{width:68px;height:68px;border-radius:50%;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;font-size:30px}
+@keyframes glow{0%,100%{box-shadow:0 0 30px rgba(41,160,224,.2)}50%{box-shadow:0 0 60px rgba(41,160,224,.4)}}
+.login-logo h1{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);margin-bottom:4px}
+.login-logo p{font-size:.78rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.login-field{margin-bottom:18px}
+.login-field label{display:block;font-size:.75rem;color:var(--muted);font-weight:600;
+  text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.login-field input{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:9px;padding:12px 16px;color:var(--white);font-size:.9rem;
+  transition:border-color .2s,box-shadow .2s;
+}
+.login-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,160,224,.12)}
+.login-field input.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.login-btn{
+  width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),var(--accent));
+  border:none;border-radius:9px;color:var(--white);font-size:.95rem;font-weight:700;
+  cursor:pointer;transition:all .25s;letter-spacing:.04em;margin-top:6px;
+}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(41,160,224,.35)}
+.login-btn:active{transform:translateY(0)}
+.login-error{
+  color:var(--red);font-size:.78rem;text-align:center;margin-top:12px;
+  min-height:20px;transition:opacity .3s;
+}
+.login-hint{text-align:center;font-size:.73rem;color:var(--muted);margin-top:18px}
+.login-hint code{color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:.78rem}
+
+/* ═══════════════════════════════════════════════════════════
+   DASHBOARD LAYOUT
+═══════════════════════════════════════════════════════════ */
+#dashboard{display:none;min-height:100vh;background:var(--dash-bg)}
+#dash-layout{display:flex;min-height:100vh}
+
+/* Sidebar */
+#sidebar{
+  width:240px;flex-shrink:0;background:var(--dash-sidebar);
+  border-right:1px solid var(--dash-border);
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.sidebar-header{
+  padding:22px 20px;border-bottom:1px solid var(--dash-border);
+  display:flex;align-items:center;gap:10px;
+}
+.sidebar-logo{font-family:'Playfair Display',serif;font-size:1rem;color:var(--white);line-height:1.2}
+.sidebar-logo small{display:block;font-family:'DM Sans',sans-serif;font-size:.68rem;color:var(--muted);font-weight:400}
+.sidebar-dot{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--cyan));
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.sidebar-nav{flex:1;padding:12px 0}
+.nav-group-label{
+  font-size:.62rem;font-weight:700;color:rgba(92,122,150,.6);text-transform:uppercase;
+  letter-spacing:.12em;padding:12px 20px 5px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;
+  font-size:.82rem;font-weight:500;color:var(--muted);transition:all .18s;border-left:3px solid transparent;
+}
+.nav-item:hover{color:var(--accent);background:rgba(41,160,224,.06)}
+.nav-item.active{color:var(--white);background:rgba(41,160,224,.1);border-left-color:var(--accent)}
+.nav-item .ni{font-size:1rem;width:18px;text-align:center}
+.nav-item .badge{margin-left:auto;background:rgba(41,160,224,.15);color:var(--accent);
+  font-size:.64rem;font-weight:700;padding:2px 7px;border-radius:50px}
+.sidebar-footer{
+  padding:14px 20px;border-top:1px solid var(--dash-border);display:flex;flex-direction:column;gap:7px;
+}
+.sidebar-footer button{
+  background:none;border:1px solid var(--dash-border);border-radius:8px;
+  padding:8px 12px;font-size:.77rem;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:7px;
+}
+#view-cv-btn{color:var(--accent);border-color:rgba(41,160,224,.3)}
+#view-cv-btn:hover{background:rgba(41,160,224,.1)}
+#logout-btn{color:var(--muted)}
+#logout-btn:hover{color:var(--red);border-color:rgba(239,68,68,.3)}
+
+/* Main content */
+#dash-main{flex:1;overflow-y:auto;padding:32px 36px;min-width:0}
+.dash-page{display:none}
+.dash-page.active{display:block}
+.dash-title{
+  font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;
+  color:var(--white);margin-bottom:6px;
+}
+.dash-sub{font-size:.82rem;color:var(--muted);margin-bottom:28px}
+.section-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.section-toolbar h2{font-size:1rem;font-weight:700;color:var(--white)}
+.add-btn{
+  display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--blue),var(--accent));
+  border:none;border-radius:9px;padding:9px 18px;color:var(--white);
+  font-size:.8rem;font-weight:700;cursor:pointer;transition:all .22s;
+}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(41,160,224,.3)}
+
+/* Item cards in dashboard */
+.item-card{
+  background:var(--dash-card);border:1px solid var(--dash-border);border-radius:var(--r);
+  padding:18px 22px;margin-bottom:12px;display:flex;align-items:flex-start;
+  gap:14px;transition:border-color .2s;position:relative;
+}
+.item-card:hover{border-color:rgba(41,160,224,.25)}
+.item-card-content{flex:1;min-width:0}
+.item-card-title{font-size:.92rem;font-weight:700;color:var(--white);margin-bottom:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-card-sub{font-size:.78rem;color:var(--muted)}
+.item-card-actions{display:flex;gap:7px;flex-shrink:0}
+.icon-btn{
+  width:32px;height:32px;border-radius:7px;border:1px solid var(--dash-border);
+  background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;transition:all .18s;
+}
+.icon-btn.edit{color:var(--accent)}
+.icon-btn.edit:hover{background:rgba(41,160,224,.12);border-color:var(--accent)}
+.icon-btn.del{color:var(--muted)}
+.icon-btn.del:hover{background:rgba(239,68,68,.1);border-color:var(--red);color:var(--red)}
+.icon-btn.move-up,.icon-btn.move-down{color:var(--muted);font-size:.7rem}
+.icon-btn.move-up:hover,.icon-btn.move-down:hover{background:rgba(41,160,224,.08);color:var(--accent)}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.dot-pub{background:var(--green)}
+.dot-rev{background:var(--orange);animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Profile & Taglines panel */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:700px){.profile-grid{grid-template-columns:1fr}}
+.field-group{display:flex;flex-direction:column;gap:6px}
+.field-group label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.dash-input{
+  background:rgba(255,255,255,.04);border:1px solid var(--dash-border);border-radius:8px;
+  padding:10px 14px;color:var(--white);font-size:.85rem;transition:border-color .2s;
+}
+.dash-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,160,224,.1)}
+.dash-input.textarea{resize:vertical;min-height:80px;line-height:1.6}
+.save-bar{
+  display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--dash-border);
+}
+.save-btn{
+  padding:9px 22px;background:linear-gradient(135deg,var(--blue),var(--accent));
+  border:none;border-radius:8px;color:var(--white);font-size:.82rem;font-weight:700;cursor:pointer;
+  transition:all .22s;
+}
+.save-btn:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(41,160,224,.3)}
+.saved-msg{font-size:.78rem;color:var(--green);display:none;align-items:center;gap:5px}
+
+/* Tagline list */
+.tagline-list{display:flex;flex-direction:column;gap:8px}
+.tagline-item{
+  display:flex;align-items:center;gap:10px;background:rgba(0,201,212,.05);
+  border:1px solid rgba(0,201,212,.15);border-radius:8px;padding:10px 14px;
+}
+.tagline-item-content{flex:1;min-width:0}
+.tagline-en{font-size:.85rem;color:var(--cyan);font-style:italic}
+.tagline-ar{font-size:.8rem;color:rgba(0,201,212,.6);direction:rtl;margin-top:2px}
+
+/* Password change */
+.pwd-form{max-width:360px;display:flex;flex-direction:column;gap:14px}
+
+/* ═══════════════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════════════ */
+#modal-overlay{
+  position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#modal-overlay.open{display:flex}
+#modal{
+  background:#0B1F38;border:1px solid rgba(41,160,224,.25);border-radius:16px;
+  width:100%;max-width:640px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
+}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 26px;border-bottom:1px solid var(--dash-border);position:sticky;top:0;
+  background:#0B1F38;z-index:1;
+}
+.modal-title{font-size:1rem;font-weight:700;color:var(--white)}
+.modal-close{
+  width:32px;height:32px;border-radius:7px;border:1px solid var(--dash-border);
+  background:none;cursor:pointer;color:var(--muted);font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;transition:all .18s;
+}
+.modal-close:hover{border-color:var(--red);color:var(--red)}
+.modal-body{padding:24px 26px}
+.modal-fields{display:flex;flex-direction:column;gap:16px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:500px){.field-row{grid-template-columns:1fr}}
+.modal-actions{
+  display:flex;gap:10px;justify-content:flex-end;margin-top:22px;
+  padding-top:16px;border-top:1px solid var(--dash-border);
+}
+.btn-cancel{
+  padding:9px 20px;background:none;border:1px solid var(--dash-border);
+  border-radius:8px;color:var(--muted);font-size:.82rem;cursor:pointer;transition:all .18s;
+}
+.btn-cancel:hover{border-color:var(--red);color:var(--red)}
+.btn-save{
+  padding:9px 22px;background:linear-gradient(135deg,var(--blue),var(--accent));
+  border:none;border-radius:8px;color:var(--white);font-size:.82rem;font-weight:700;
+  cursor:pointer;transition:all .22s;
+}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(41,160,224,.3)}
+
+/* bullet editor */
+.bullet-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.bullet-row{display:flex;gap:8px;align-items:flex-start}
+.bullet-row textarea{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--dash-border);
+  border-radius:7px;padding:8px 12px;color:var(--white);font-size:.8rem;resize:vertical;min-height:56px}
+.bullet-row textarea:focus{outline:none;border-color:var(--accent)}
+.bullet-add{
+  margin-top:6px;background:none;border:1px dashed var(--border);border-radius:7px;
+  padding:7px 14px;color:var(--muted);font-size:.77rem;cursor:pointer;width:100%;
+  transition:all .18s;
+}
+.bullet-add:hover{border-color:var(--accent);color:var(--accent)}
+
+/* select */
+select.dash-input{cursor:pointer}
+select.dash-input option{background:#0B1F38}
+
+/* domain pills */
+.domain-pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.domain-pill{
+  padding:5px 13px;border-radius:50px;font-size:.73rem;font-weight:600;cursor:pointer;
+  border:1px solid var(--border);color:var(--muted);transition:all .18s;
+}
+.domain-pill:hover{border-color:var(--accent)}
+.domain-pill.sel-space{background:rgba(0,201,212,.12);border-color:rgba(0,201,212,.4);color:var(--cyan)}
+.domain-pill.sel-med{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#F87171}
+.domain-pill.sel-ai{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:#C4B5FD}
+.domain-pill.sel-sec{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--orange)}
+.domain-pill.sel-soc{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:var(--green)}
+
+/* ═══════════════════════════════════════════════════════════
+   PUBLIC CV VIEW
+═══════════════════════════════════════════════════════════ */
+#cv-view{display:none;background:var(--deep);min-height:100vh}
+/* nav */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;
+  justify-content:space-between;padding:0 28px;height:58px;
+  background:rgba(6,16,28,.9);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+#topbar-left{display:flex;gap:5px}
+.nav-pill{
+  padding:5px 13px;border-radius:50px;font-size:.72rem;font-weight:600;
+  color:var(--muted);cursor:pointer;transition:all .2s;border:1px solid transparent;
+}
+.nav-pill:hover,.nav-pill.active{background:rgba(41,160,224,.12);border-color:rgba(41,160,224,.3);color:var(--accent)}
+#topbar-right{display:flex;gap:8px;align-items:center}
+#lang-btn{
+  background:var(--gold);color:#06101C;border:none;border-radius:50px;
+  padding:7px 18px;font-size:.78rem;font-weight:700;cursor:pointer;
+  transition:all .3s;font-family:inherit;white-space:nowrap;
+}
+#lang-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(200,145,26,.4)}
+#admin-btn{
+  background:rgba(41,160,224,.1);border:1px solid rgba(41,160,224,.3);
+  color:var(--accent);border-radius:50px;padding:6px 14px;font-size:.72rem;
+  font-weight:700;cursor:pointer;transition:all .2s;
+}
+#admin-btn:hover{background:rgba(41,160,224,.2)}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+#cv-wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:78px 22px 80px}
+
+/* Hero */
+#hero{padding:52px 0 44px;text-align:center}
+.avatar-ring{
+  width:100px;height:100px;border-radius:50%;margin:0 auto 18px;
+  background:linear-gradient(135deg,var(--gold),var(--cyan));padding:3px;
+  display:flex;align-items:center;justify-content:center;animation:glow 4s ease-in-out infinite;
+}
+.avatar-inner{width:94px;height:94px;border-radius:50%;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;font-size:38px}
+.hero-name{
+  font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.4rem);font-weight:900;
+  color:var(--white);line-height:1.05;margin-bottom:8px;
+}
+body.ar .hero-name{font-family:'Cairo',sans-serif}
+.hero-sub{font-size:.87rem;color:var(--cyan);letter-spacing:.13em;text-transform:uppercase;margin-bottom:6px;font-weight:500}
+body.ar .hero-sub{letter-spacing:.03em}
+.hero-tagline-text{font-style:italic;color:rgba(184,207,232,.55);font-size:.85rem;margin-bottom:24px;min-height:22px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:28px}
+.hero-tag{
+  background:rgba(41,160,224,.08);border:1px solid rgba(41,160,224,.18);
+  color:#78B8E0;border-radius:50px;padding:4px 13px;font-size:.76rem;font-weight:500;
+}
+.contact-grid{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.contact-pill{
+  display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);border-radius:50px;
+  padding:6px 15px;color:#90ADCA;font-size:.76rem;transition:all .2s;
+}
+.contact-pill:hover{background:rgba(41,160,224,.1);border-color:var(--accent);color:var(--white)}
+
+/* Stats */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin:42px 0;
+  border-radius:var(--r);overflow:hidden;border:1px solid rgba(255,255,255,.04);
+}
+@media(max-width:600px){.stats-bar{grid-template-columns:repeat(3,1fr)}}
+.stat{background:rgba(11,31,56,.7);padding:20px 12px;text-align:center;transition:background .3s;cursor:default}
+.stat:hover{background:rgba(26,92,150,.22)}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:4px}
+body.ar .stat-num{font-family:'Cairo',sans-serif}
+.stat-label{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+body.ar .stat-label{letter-spacing:.02em}
+
+/* CV Section */
+.cv-section{margin-bottom:52px}
+.sec-header{display:flex;align-items:center;gap:13px;margin-bottom:22px}
+body.ar .sec-header{flex-direction:row-reverse}
+.sec-icon{
+  width:38px;height:38px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--blue),var(--accent));
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+  box-shadow:0 4px 12px rgba(41,160,224,.2);
+}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.28rem;font-weight:700;color:var(--white)}
+body.ar .sec-title{font-family:'Cairo',sans-serif}
+.sec-line{flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent)}
+body.ar .sec-line{background:linear-gradient(to left,var(--border),transparent)}
+
+/* CV cards */
+.cv-card{
+  background:var(--card);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--r);padding:24px 26px;margin-bottom:13px;position:relative;
+  overflow:hidden;transition:transform .28s,border-color .28s,box-shadow .28s;
+}
+.cv-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0;transition:opacity .3s;
+}
+.cv-card:hover{transform:translateY(-3px);border-color:rgba(41,160,224,.22);box-shadow:0 14px 36px rgba(0,0,0,.28)}
+.cv-card:hover::before{opacity:1}
+.cv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:13px;margin-bottom:7px}
+body.ar .cv-top{flex-direction:row-reverse}
+.cv-title{font-size:1rem;font-weight:700;color:var(--white);line-height:1.3}
+.cv-org{font-size:.82rem;color:var(--accent);font-weight:600;margin-top:2px}
+.cv-date{
+  font-size:.71rem;color:var(--muted);white-space:nowrap;padding:3px 10px;
+  background:rgba(255,255,255,.04);border-radius:50px;border:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;font-family:'JetBrains Mono',monospace;
+}
+.cv-desc{font-size:.82rem;color:#7A9AB8;line-height:1.72;margin-top:9px}
+.cv-card ul{list-style:none;margin-top:10px;display:flex;flex-direction:column;gap:4px}
+.cv-card ul li{font-size:.81rem;color:#7A9AB8;line-height:1.65;padding-left:17px;position:relative}
+body.ar .cv-card ul li{padding-left:0;padding-right:17px}
+.cv-card ul li::before{content:'▸';color:var(--gold);position:absolute;left:0;top:2px;font-size:.76rem}
+body.ar .cv-card ul li::before{left:auto;right:0;content:'◂'}
+
+/* Tagline callout */
+.tagline-callout{
+  display:flex;align-items:center;gap:9px;background:rgba(0,201,212,.05);
+  border:1px solid rgba(0,201,212,.18);border-radius:7px;
+  padding:9px 14px;margin:9px 0 12px;font-style:italic;font-size:.85rem;color:var(--cyan);
+}
+body.ar .tagline-callout{flex-direction:row-reverse}
+.tagline-callout::before{content:'"';font-size:1.8rem;color:rgba(0,201,212,.3);line-height:.8;flex-shrink:0}
+
+/* Pillars */
+.pillars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}
+@media(max-width:550px){.pillars-grid{grid-template-columns:1fr}}
+.pillar{background:rgba(41,160,224,.05);border:1px solid rgba(41,160,224,.13);border-radius:7px;padding:11px 13px;text-align:center}
+.pillar-icon{font-size:1.3rem;margin-bottom:5px}
+.pillar-name{font-size:.72rem;font-weight:700;color:var(--accent);margin-bottom:2px;text-transform:uppercase;letter-spacing:.06em}
+body.ar .pillar-name{letter-spacing:.02em}
+.pillar-desc{font-size:.7rem;color:var(--muted);line-height:1.35}
+
+/* Blocks */
+.blocks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
+@media(max-width:550px){.blocks-grid{grid-template-columns:repeat(2,1fr)}}
+.block-chip{
+  background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.16);
+  border-radius:7px;padding:8px 10px;text-align:center;font-size:.72rem;
+  color:#B8A8F8;font-weight:600;transition:all .2s;
+}
+.block-chip:hover{background:rgba(167,139,250,.12);color:var(--white)}
+.block-chip .bicon{display:block;font-size:1rem;margin-bottom:3px}
+
+/* Metrics */
+.metrics-row{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.metric-badge{display:flex;align-items:center;gap:6px;background:rgba(34,197,94,.07);
+  border:1px solid rgba(34,197,94,.2);border-radius:50px;padding:6px 14px}
+.metric-num{font-size:1.05rem;font-weight:700;color:var(--green)}
+.metric-label{font-size:.73rem;color:#6EBE8A}
+
+/* Publication card */
+.pub-card{
+  background:linear-gradient(135deg,rgba(11,31,56,.9),rgba(26,92,150,.13));
+  border:1px solid rgba(200,145,26,.2);border-radius:var(--r);
+  padding:26px 28px;margin-bottom:13px;position:relative;overflow:hidden;
+}
+.pub-card::after{content:'"';position:absolute;top:-18px;right:14px;font-size:100px;
+  color:rgba(200,145,26,.04);font-family:'Playfair Display',serif;pointer-events:none}
+body.ar .pub-card::after{right:auto;left:14px}
+.pub-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(200,145,26,.1);
+  border:1px solid rgba(200,145,26,.3);color:var(--gold-lt);border-radius:50px;
+  padding:3px 11px;font-size:.7rem;font-weight:700;margin-bottom:11px;letter-spacing:.04em}
+.status-badge{display:inline-flex;align-items:center;gap:4px;border-radius:50px;
+  padding:3px 11px;font-size:.7rem;font-weight:700;margin-bottom:9px;margin-left:6px}
+body.ar .status-badge{margin-left:0;margin-right:6px}
+.s-published{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.28);color:var(--green)}
+.s-review{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);color:var(--orange)}
+.pub-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;
+  color:var(--white);line-height:1.42;margin-bottom:8px}
+body.ar .pub-title{font-family:'Cairo',sans-serif}
+.pub-meta{font-size:.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:12px;margin-bottom:11px}
+body.ar .pub-meta{flex-direction:row-reverse}
+.pub-link{display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-size:.76rem;font-weight:600;transition:color .2s}
+.pub-link:hover{color:var(--gold)}
+
+/* Paper filter */
+.research-filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.r-filter{padding:5px 14px;border-radius:50px;font-size:.73rem;font-weight:600;
+  cursor:pointer;border:1px solid var(--border);color:var(--muted);background:transparent;font-family:inherit;transition:all .2s}
+.r-filter:hover{border-color:rgba(41,160,224,.4);color:var(--accent)}
+.r-filter.ractive{background:rgba(41,160,224,.1);border-color:var(--accent);color:var(--white)}
+.r-filter.rall.ractive{background:rgba(200,145,26,.08);border-color:var(--gold);color:var(--gold-lt)}
+.papers-grid{display:flex;flex-direction:column;gap:10px}
+.paper-card{
+  background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);
+  padding:18px 22px;transition:all .25s;
+}
+.paper-card:hover{border-color:rgba(41,160,224,.18);transform:translateX(3px)}
+body.ar .paper-card:hover{transform:translateX(-3px)}
+.paper-card.hidden{display:none}
+.paper-top{display:flex;align-items:flex-start;gap:11px;justify-content:space-between}
+body.ar .paper-top{flex-direction:row-reverse}
+.paper-title{font-size:.88rem;font-weight:600;color:var(--white);line-height:1.45;flex:1}
+.paper-cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.paper-desc{font-size:.78rem;color:var(--muted);margin-top:7px;line-height:1.55}
+.paper-meta-row{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:wrap}
+body.ar .paper-meta-row{flex-direction:row-reverse}
+.paper-domain{font-size:.67rem;font-weight:700;padding:2px 9px;border-radius:50px;text-transform:uppercase;letter-spacing:.05em}
+.dom-space{background:rgba(0,201,212,.07);border:1px solid rgba(0,201,212,.22);color:var(--cyan)}
+.dom-med{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);color:#F87171}
+.dom-ai{background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.2);color:#C4B5FD}
+.dom-sec{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);color:var(--orange)}
+.dom-soc{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);color:var(--green)}
+.paper-status-lbl{font-size:.7rem;font-weight:700;display:flex;align-items:center;gap:3px}
+
+/* Awards */
+.awards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+@media(max-width:560px){.awards-grid{grid-template-columns:1fr}}
+.award-card{
+  background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);
+  padding:18px 20px;transition:all .28s;position:relative;overflow:hidden;
+}
+.award-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(to bottom,var(--gold),var(--cyan))}
+body.ar .award-card::before{left:auto;right:0}
+.award-card:hover{border-color:rgba(200,145,26,.28);transform:translateY(-2px)}
+.award-medal{font-size:1.4rem;margin-bottom:6px}
+.award-title{font-size:.88rem;font-weight:700;color:var(--white);margin-bottom:4px}
+.award-org{font-size:.74rem;color:var(--muted);line-height:1.4}
+.award-year{position:absolute;top:14px;right:14px;font-size:.66rem;color:var(--gold);
+  font-weight:700;background:rgba(200,145,26,.08);border:1px solid rgba(200,145,26,.18);
+  padding:2px 7px;border-radius:50px;font-family:'JetBrains Mono',monospace}
+body.ar .award-year{right:auto;left:14px}
+
+/* Skills */
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:540px){.skills-grid{grid-template-columns:1fr}}
+.skill-group{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:17px;transition:border-color .3s}
+.skill-group:hover{border-color:rgba(41,160,224,.22)}
+.skill-group-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);font-weight:700;margin-bottom:10px}
+body.ar .skill-group-title{letter-spacing:.03em}
+.skill-tags{display:flex;flex-wrap:wrap;gap:5px}
+.skill-tag{background:rgba(41,160,224,.07);border:1px solid rgba(41,160,224,.17);color:#78B8E0;
+  border-radius:6px;padding:3px 10px;font-size:.75rem;font-weight:500;transition:all .17s}
+.skill-tag:hover{background:rgba(41,160,224,.17);color:var(--white);border-color:var(--accent)}
+
+/* Lang table */
+.lang-table{width:100%;border-collapse:separate;border-spacing:3px}
+.lang-table th{background:var(--navy);color:var(--accent);font-size:.66rem;text-transform:uppercase;
+  letter-spacing:.07em;padding:9px 11px;font-weight:700;border-radius:5px}
+body.ar .lang-table th{letter-spacing:.02em}
+.lang-table td{background:rgba(11,31,56,.6);color:#7A9AB8;font-size:.8rem;padding:9px 11px;
+  text-align:center;border-radius:5px;transition:background .2s}
+.lang-table td:first-child{text-align:left;color:var(--white);font-weight:600}
+body.ar .lang-table td:first-child{text-align:right}
+.lang-table tr:hover td{background:rgba(26,92,150,.18)}
+.lc1{color:var(--accent);font-weight:700}.lb{color:#4CAF50;font-weight:700}.la{color:var(--muted)}
+
+/* Cert */
+.cert-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+@media(max-width:540px){.cert-grid{grid-template-columns:1fr}}
+.cert-card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);padding:17px;transition:all .25s}
+.cert-card:hover{border-color:rgba(200,145,26,.28);transform:translateY(-2px)}
+.cert-name{font-size:.88rem;font-weight:700;color:var(--white);margin-bottom:2px}
+.cert-org{font-size:.76rem;color:var(--accent);margin-bottom:4px}
+.cert-desc{font-size:.74rem;color:var(--muted);line-height:1.5}
+.cert-year{display:inline-block;background:rgba(200,145,26,.07);border:1px solid rgba(200,145,26,.18);
+  color:var(--gold);font-size:.67rem;font-weight:700;padding:2px 8px;border-radius:50px;
+  margin-bottom:7px;font-family:'JetBrains Mono',monospace}
+
+#cv-footer{text-align:center;padding:26px 0;color:rgba(255,255,255,.1);font-size:.74rem;
+  border-top:1px solid rgba(255,255,255,.04)}
+.footer-admin-link{
+  display:inline-flex;align-items:center;gap:5px;
+  color:rgba(92,122,150,.4);font-size:.72rem;margin-top:10px;
+  transition:color .2s;cursor:pointer;text-decoration:none;
+}
+.footer-admin-link:hover{color:rgba(41,160,224,.6)}
+
+@media(max-width:640px){
+  .cv-top{flex-direction:column}
+  body.ar .cv-top{flex-direction:column}
+  #topbar-left{display:none}
+  #dash-layout{flex-direction:column}
+  #sidebar{width:100%;height:auto;position:static}
+  #dash-main{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ LOGIN SCREEN ═══════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <button class="login-box-close" onclick="closeLoginModal()" title="Close">✕</button>
+    <div class="login-logo">
+      <div class="avatar"><div class="avatar-in">🧠</div></div>
+      <h1>Anas Shahin</h1>
+      <p>CV Management Portal</p>
+    </div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">Enter your admin credentials to manage this CV</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div id="dashboard">
+  <div id="dash-layout">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-dot">🧠</div>
+        <div class="sidebar-logo">CV Admin<small>Anas Shahin</small></div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-group-label">Content</div>
+        <div class="nav-item active" onclick="showPage('profile')" data-page="profile"><span class="ni">👤</span>Profile & Taglines</div>
+        <div class="nav-item" onclick="showPage('papers')" data-page="papers"><span class="ni">🔬</span>Research Papers<span class="badge" id="badge-papers">0</span></div>
+        <div class="nav-item" onclick="showPage('projects')" data-page="projects"><span class="ni">🚀</span>Projects & Ventures</div>
+        <div class="nav-item" onclick="showPage('awards')" data-page="awards"><span class="ni">🏆</span>Awards</div>
+        <div class="nav-item" onclick="showPage('volunteering')" data-page="volunteering"><span class="ni">🤝</span>Volunteering</div>
+        <div class="nav-item" onclick="showPage('certs')" data-page="certs"><span class="ni">📜</span>Certifications</div>
+        <div class="nav-item" onclick="showPage('skills')" data-page="skills"><span class="ni">⚡</span>Skills</div>
+        <div class="nav-group-label">Account</div>
+        <div class="nav-item" onclick="showPage('settings')" data-page="settings"><span class="ni">⚙️</span>Settings</div>
+      </div>
+      <div class="sidebar-footer">
+        <button id="view-cv-btn" onclick="switchToCV()">👁 View Public CV</button>
+        <button id="logout-btn" onclick="logout()">↩ Log Out</button>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main id="dash-main">
+
+      <!-- Profile page -->
+      <div class="dash-page active" id="page-profile">
+        <div class="dash-title">Profile & Identity</div>
+        <div class="dash-sub">Edit your name, subtitle, taglines, and contact info</div>
+
+        <div style="font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:14px">Basic Info</div>
+        <div class="profile-grid">
+          <div class="field-group"><label>Name (English)</label><input class="dash-input" id="p-name-en"></div>
+          <div class="field-group"><label>الاسم (عربي)</label><input class="dash-input" id="p-name-ar" dir="rtl"></div>
+          <div class="field-group"><label>Subtitle (English)</label><input class="dash-input" id="p-sub-en"></div>
+          <div class="field-group"><label>العنوان الفرعي (عربي)</label><input class="dash-input" id="p-sub-ar" dir="rtl"></div>
+          <div class="field-group"><label>Email</label><input class="dash-input" id="p-email" type="email"></div>
+          <div class="field-group"><label>Phone</label><input class="dash-input" id="p-phone"></div>
+          <div class="field-group"><label>Location (English)</label><input class="dash-input" id="p-loc-en"></div>
+          <div class="field-group"><label>الموقع (عربي)</label><input class="dash-input" id="p-loc-ar" dir="rtl"></div>
+          <div class="field-group"><label>LinkedIn URL</label><input class="dash-input" id="p-linkedin"></div>
+          <div class="field-group"><label>Instagram Handle</label><input class="dash-input" id="p-instagram"></div>
+        </div>
+        <div class="save-bar">
+          <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
+          <span class="saved-msg" id="profile-saved">✓ Saved!</span>
+        </div>
+
+        <div style="margin-top:32px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:.85rem;font-weight:700;color:var(--white)">Taglines <span style="color:var(--muted);font-weight:400;font-size:.75rem">(shown rotating under your name)</span></div>
+          <button class="add-btn" onclick="openTaglineModal()">+ Add Tagline</button>
+        </div>
+        <div class="tagline-list" id="tagline-list"></div>
+      </div>
+
+      <!-- Papers page -->
+      <div class="dash-page" id="page-papers">
+        <div class="dash-title">Research Papers</div>
+        <div class="dash-sub">Manage published and submitted research. Update status when a paper gets accepted.</div>
+        <div class="section-toolbar">
+          <h2>All Papers</h2>
+          <button class="add-btn" onclick="openPaperModal()">+ Add Paper</button>
+        </div>
+        <div id="papers-list"></div>
+      </div>
+
+      <!-- Projects page -->
+      <div class="dash-page" id="page-projects">
+        <div class="dash-title">Projects & Ventures</div>
+        <div class="dash-sub">Edit descriptions, bullets, metrics, taglines and pillars for each initiative</div>
+        <div class="section-toolbar">
+          <h2>All Projects</h2>
+          <button class="add-btn" onclick="openProjectModal()">+ Add Project</button>
+        </div>
+        <div id="projects-list"></div>
+      </div>
+
+      <!-- Awards page -->
+      <div class="dash-page" id="page-awards">
+        <div class="dash-title">Honours & Awards</div>
+        <div class="dash-sub">Add new competitions, recognitions, and achievements</div>
+        <div class="section-toolbar">
+          <h2>All Awards</h2>
+          <button class="add-btn" onclick="openAwardModal()">+ Add Award</button>
+        </div>
+        <div id="awards-list"></div>
+      </div>
+
+      <!-- Volunteering page -->
+      <div class="dash-page" id="page-volunteering">
+        <div class="dash-title">Volunteering</div>
+        <div class="dash-sub">Manage your community and volunteer roles</div>
+        <div class="section-toolbar">
+          <h2>All Roles</h2>
+          <button class="add-btn" onclick="openVolunteerModal()">+ Add Role</button>
+        </div>
+        <div id="volunteering-list"></div>
+      </div>
+
+      <!-- Certs page -->
+      <div class="dash-page" id="page-certs">
+        <div class="dash-title">Certifications</div>
+        <div class="dash-sub">Add and manage courses and certifications</div>
+        <div class="section-toolbar">
+          <h2>All Certifications</h2>
+          <button class="add-btn" onclick="openCertModal()">+ Add Certification</button>
+        </div>
+        <div id="certs-list"></div>
+      </div>
+
+      <!-- Skills page -->
+      <div class="dash-page" id="page-skills">
+        <div class="dash-title">Skills</div>
+        <div class="dash-sub">Manage skill groups and tags</div>
+        <div class="section-toolbar">
+          <h2>Skill Groups</h2>
+          <button class="add-btn" onclick="openSkillModal()">+ Add Group</button>
+        </div>
+        <div id="skills-list"></div>
+      </div>
+
+      <!-- Settings page -->
+      <div class="dash-page" id="page-settings">
+        <div class="dash-title">Settings</div>
+        <div class="dash-sub">Change your admin password</div>
+        <div class="pwd-form">
+          <div class="field-group"><label>Current Password</label><input class="dash-input" id="pwd-curr" type="password"></div>
+          <div class="field-group"><label>New Password</label><input class="dash-input" id="pwd-new" type="password"></div>
+          <div class="field-group"><label>Confirm New Password</label><input class="dash-input" id="pwd-confirm" type="password"></div>
+          <div class="save-bar" style="border:none;padding:0;margin:0">
+            <button class="save-btn" onclick="changePassword()">🔒 Change Password</button>
+            <span class="saved-msg" id="pwd-saved">✓ Password changed!</span>
+          </div>
+          <div id="pwd-error" style="color:var(--red);font-size:.78rem;min-height:18px"></div>
+        </div>
+        <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--dash-border)">
+          <div style="font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:12px">Data Management</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="save-btn" onclick="exportData()">📤 Export Data (JSON)</button>
+            <button style="padding:9px 18px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;color:var(--red);font-size:.82rem;cursor:pointer;transition:all .2s" onclick="resetToDefaults()">⚠️ Reset to Defaults</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL ═══════════════════ -->
+<div id="modal-overlay" onclick="closeModalOutside(event)">
+  <div id="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Edit</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PUBLIC CV VIEW ═══════════════════ -->
+<div id="cv-view">
+  <canvas id="bg-canvas"></canvas>
+  <nav id="topbar">
+    <div id="topbar-left">
+      <span class="nav-pill" onclick="cvScroll('education')" data-target="education" data-en="Education" data-ar="التعليم">Education</span>
+      <span class="nav-pill" onclick="cvScroll('research')" data-target="research" data-en="Research" data-ar="الأبحاث">Research</span>
+      <span class="nav-pill" onclick="cvScroll('projects')" data-target="projects" data-en="Ventures" data-ar="المشاريع">Ventures</span>
+      <span class="nav-pill" onclick="cvScroll('awards')" data-target="awards" data-en="Awards" data-ar="الجوائز">Awards</span>
+      <span class="nav-pill" onclick="cvScroll('cv-skills')" data-target="cv-skills" data-en="Skills" data-ar="المهارات">Skills</span>
+    </div>
+    <div id="topbar-right">
+      <button id="admin-btn" onclick="switchToDash()" style="display:none">⚙ Admin</button>
+      <button id="lang-btn" onclick="toggleLang()">العربية</button>
+    </div>
+  </nav>
+  <div id="cv-wrap">
+    <!-- Hero -->
+    <section id="hero">
+      <div class="avatar-ring"><div class="avatar-inner">🧠</div></div>
+      <h1 class="hero-name" id="cv-name">Anas Shahin</h1>
+      <p class="hero-sub" id="cv-sub">AI Researcher · IT Engineer · Entrepreneur</p>
+      <p class="hero-tagline-text" id="cv-tagline"></p>
+      <div class="hero-tags" id="cv-hero-tags"></div>
+      <div class="contact-grid" id="cv-contacts"></div>
+    </section>
+    <div class="stats-bar" id="cv-stats"></div>
+    <div id="cv-sections"></div>
+    <footer id="cv-footer">
+      <div id="cv-foot-text"></div>
+      <div><a class="footer-admin-link" onclick="openLoginModal()">🔐 Are you Anas? <span style="text-decoration:underline;text-underline-offset:3px">Management Portal</span></a></div>
+    </footer>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DEFAULT DATA
+// ═══════════════════════════════════════════════════════
+const DEFAULT_DATA = {
+  auth:{ user:'anas', pass:'AlphaX2025!' },
+  profile:{
+    name_en:'Anas Shahin', name_ar:'أنس شاهين',
+    sub_en:'AI Researcher · IT Engineer · Entrepreneur',
+    sub_ar:'باحث في الذكاء الاصطناعي · مهندس تقنية معلومات · رائد أعمال',
+    email:'ons.hassan.shahin@gmail.com', phone:'(+963) 992380816',
+    loc_en:'Al Muhajreen, Damascus, Syria', loc_ar:'المهاجرين، دمشق، سوريا',
+    linkedin:'https://www.linkedin.com/in/ons-shahin',
+    instagram:'https://www.instagram.com/ons_shahin',
+    dob:'17/03/2005',
+  },
+  taglines:[
+    {en:'From knowledge consumers to knowledge creators.',ar:'من مستهلكي المعرفة إلى صانعيها.'},
+    {en:'Bridging AI innovation and clinical impact.',ar:'ردم الهوة بين ابتكار الذكاء الاصطناعي والأثر السريري.'},
+    {en:'Making science accessible in Arabic.',ar:'جعل العلوم في متناول الجميع بالعربية.'},
+  ],
+  papers:[
+    {id:'p1',title_en:'Fine-tuned ResNet34 for Efficient Brain Tumor Classification',title_ar:'شبكة ResNet34 المُدرَّبة لتصنيف أورام الدماغ بكفاءة',status:'published',journal:'Scientific Reports',publisher:'Springer Nature',doi:'https://doi.org/10.1038/s41598-025-20872-3',domain:'med',year:'2025',desc_en:'Developed and validated a CNN-based model for brain tumor detection with high accuracy under resource-limited settings. Led all stages: data preprocessing, model optimization, and manuscript writing.',desc_ar:'طوّر ووثّق نموذج CNN عالي الدقة لاكتشاف أورام الدماغ. قاد جميع مراحل البحث: المعالجة المسبقة، تحسين النموذج، وكتابة المخطوطة.'},
+    {id:'p2',title_en:'A Conceptual Framework for Federated Learning Across Distributed Lunar Surface Assets',title_ar:'إطار مفاهيمي للتعلم الموزع عبر الأصول المنتشرة على السطح القمري',status:'review',journal:'',publisher:'',doi:'',domain:'space',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p3',title_en:'AI-Driven Autonomous Dust Mitigation & Cleaning System for Extraterrestrial Solar Panels',title_ar:'نظام مستقل مدعوم بالذكاء الاصطناعي لتخفيف الغبار وتنظيف الألواح الشمسية خارج الأرض',status:'review',journal:'',publisher:'',doi:'',domain:'space',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p4',title_en:'SpaceMind OS: A Layered LLM Operating System for Autonomous Deep Space Mission Management',title_ar:'SpaceMind OS: نظام تشغيل LLM متعدد الطبقات لإدارة مهمات الفضاء العميق',status:'review',journal:'',publisher:'',doi:'',domain:'space',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p5',title_en:'ARIA: Autonomous Reasoning & Intervention Architecture for Bioregenerative Life Support on Mars Missions',title_ar:'ARIA: بنية استدلال وتدخل مستقلة لأنظمة دعم الحياة في مهمات المريخ',status:'review',journal:'',publisher:'',doi:'',domain:'space',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p6',title_en:'A Multi-Level Data Condensation & Discriminative Feature Extraction Framework for High-Accuracy Medical Classification',title_ar:'إطار متعدد المستويات لتكثيف البيانات والتصنيف الطبي عالي الدقة',status:'review',journal:'',publisher:'',doi:'',domain:'med',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p7',title_en:'Global Disparities in Breast Cancer Screening Access: A Comparative Analysis Across Income Settings',title_ar:'التفاوتات العالمية في الوصول إلى فحص سرطان الثدي',status:'review',journal:'',publisher:'',doi:'',domain:'med',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p8',title_en:'MDEF-AI: A Multi-Level Dynamic Evaluation Framework for AI-Based Clinical Decision Support',title_ar:'MDEF-AI: إطار تقييم ديناميكي متعدد المستويات للذكاء الاصطناعي السريري',status:'review',journal:'',publisher:'',doi:'',domain:'med',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p9',title_en:'Artificial Intelligence in Breast Cancer Detection: A Critical Review of Advanced Imaging Integration',title_ar:'الذكاء الاصطناعي في اكتشاف سرطان الثدي: مراجعة نقدية',status:'review',journal:'',publisher:'',doi:'',domain:'med',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p10',title_en:'Beyond Behavioral Assessment: A Critical Review of Emerging Diagnostic Technologies for ADHD',title_ar:'ما وراء التقييم السلوكي: مراجعة نقدية لتقنيات تشخيص ADHD',status:'review',journal:'',publisher:'',doi:'',domain:'med',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p11',title_en:'Multi-Agent AI Framework for Alzheimer\'s Disease Trajectory Prediction via Sleep-Derived Biomarkers',title_ar:'إطار ذكاء اصطناعي متعدد الوكلاء للتنبؤ بمسار مرض الزهايمر',status:'review',journal:'',publisher:'',doi:'',domain:'med',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p12',title_en:'CEDF-CS: A Record-Level Data Condensation Framework for Resource-Efficient Intrusion Detection in Industrial IoT',title_ar:'CEDF-CS: إطار تكثيف بيانات لكشف التسلل في إنترنت الأشياء الصناعي',status:'review',journal:'',publisher:'',doi:'',domain:'sec',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p13',title_en:'AI-Generated Political Satire as a Proxy for Societal Freedom of Expression: The Discursive Reflection Hypothesis',title_ar:'السخرية السياسية المولَّدة بالذكاء الاصطناعي كمعيار لحرية التعبير: فرضية الانعكاس الخطابي',status:'review',journal:'',publisher:'',doi:'',domain:'soc',year:'2025',desc_en:'',desc_ar:''},
+    {id:'p14',title_en:'A Multi-Agent AI Framework for Mental Health Triage & Support in Post-Conflict Arabic-Speaking Populations',title_ar:'إطار ذكاء اصطناعي متعدد الوكلاء لدعم الصحة النفسية في المجتمعات العربية بعد النزاعات',status:'review',journal:'',publisher:'',doi:'',domain:'soc',year:'2025',desc_en:'',desc_ar:''},
+  ],
+  projects:[
+    {id:'pr1',name_en:'NeuroVision — Founder',name_ar:'NeuroVision — مؤسس',org_en:'AI Research Team · Healthcare AI',org_ar:'فريق بحثي في الذكاء الاصطناعي الصحي',date_en:'Feb 2025 – Present',date_ar:'فبراير 2025 – حتى الآن',tagline_en:'',tagline_ar:'',
+      bullets_en:['Multidisciplinary team advancing AI research in the healthcare sector, starting with MRI-based brain tumor detection.','Expanding toward scalable models for multiple tumors, illnesses, and clinical diagnostic tools.','Bridges AI innovation and clinical impact — creating equitable, data-driven tools supporting physicians.'],
+      bullets_ar:['فريق متعدد التخصصات يعمل على تطوير أبحاث الذكاء الاصطناعي في القطاع الصحي، بدءاً من الكشف عن أورام الدماغ عبر MRI.','التوسع نحو نماذج قابلة للتوسع لأورام وأمراض متعددة وأدوات تشخيص سريرية.','يربط بين ابتكار الذكاء الاصطناعي والأثر السريري — بناء أدوات تشخيصية تدعم الأطباء وتعزز العدالة الصحية.'],
+      metrics:[],pillars:[],blocks:[]},
+    {id:'pr2',name_en:'AlphaX Research Collective — Co-Founder & Co-Captain',name_ar:'AlphaX Research Collective — مؤسس مشارك وقائد مشارك',org_en:'Multidisciplinary Syrian Research Collective',org_ar:'مجموعة البحث السورية متعددة التخصصات',date_en:'May 2025 – Present',date_ar:'مايو 2025 – حتى الآن',
+      tagline_en:'From knowledge consumers to knowledge creators.',tagline_ar:'من مستهلكي المعرفة إلى صانعيها.',
+      bullets_en:['Architected full organizational infrastructure: onboarding systems, Navigator handbook, block-specific operational guides, and branded visual identity.','Designed the Knowledge Bridge pipeline — a 6-stage Arabic research translation workflow with dual-review, rolling roles, and cross-block collaboration.','Implemented a Notion-based contribution tracking system with rollup formulas, time-based filtering, and a 4-tier task classification framework.'],
+      bullets_ar:['صمّم البنية التنظيمية الكاملة: أنظمة التأهيل، دليل قادة الوحدات، أدلة تشغيل خاصة بكل وحدة، وهوية بصرية مميزة.','صمّم خط أنابيب Knowledge Bridge — مسار ترجمة بحثية عربي من 6 مراحل بنظام مراجعة مزدوج وأدوار متداولة.','بنى نظام تتبع مساهمات على Notion بصيغ Rollup وتصفية زمنية وإطار تصنيف رباعي للمهام.'],
+      metrics:[],
+      pillars:[{icon:'🌍',name_en:'Translation & Access',name_ar:'الترجمة والوصول',desc_en:'Making global science accessible in Arabic',desc_ar:'جعل العلوم العالمية متاحة بالعربية'},{icon:'⚗️',name_en:'Research & Innovation',name_ar:'البحث والابتكار',desc_en:'Producing original cross-disciplinary research',desc_ar:'إنتاج أبحاث أصيلة متعددة التخصصات'},{icon:'📚',name_en:'Training & Capacity',name_ar:'التدريب وبناء القدرات',desc_en:'Empowering Syrian youth in research skills',desc_ar:'تمكين الشباب السوري في مهارات البحث'}],
+      blocks:['🎨 Creative Lab','🌉 Knowledge Bridge','⚕️ Asclepius Lab','🧬 Neuroscience Research','⚙️ Operations & Strategy','📡 Science Comm & Outreach']},
+    {id:'pr3',name_en:'EDGLISH — Founder & Lead Educator',name_ar:'EDGLISH — مؤسس ومعلم رئيسي',org_en:'Free English Learning Platform for Arab Students',org_ar:'منصة تعليم الإنجليزية المجانية للطلاب العرب',date_en:'2023 – Present',date_ar:'2023 – حتى الآن',tagline_en:'',tagline_ar:'',
+      bullets_en:['Founded at age 17 to break a systemic barrier: ambitious Arabic-speaking students locked out of international scholarships due to English proficiency gaps.','Scaled the free platform to 30,000+ visitors with a team of four, delivering structured resources targeting academic English, research communication, and scientific writing.','Personally reviews all lesson content for clarity. Currently redesigning with AI-powered personalized tutoring features.','Maintains consistent output under severe infrastructure constraints through resourceful problem-solving and team coordination.'],
+      bullets_ar:['أسّسها في سن 17 لكسر حاجز منهجي: استبعاد الطلاب العرب الطموحين من المنح الدولية بسبب ضعف الإنجليزية.','وسّع المنصة المجانية لتصل إلى 30,000+ زائر بفريق من أربعة، تقديم موارد منظمة في الإنجليزية الأكاديمية والكتابة العلمية.','يراجع شخصياً كل محتوى الدروس — يعيد حالياً تصميم المنصة بميزات تدريس شخصية مدعومة بالذكاء الاصطناعي.','يحافظ على الاستمرارية رغم قيود البنية التحتية الشديدة من خلال حل مبدع للمشكلات وتنسيق الفريق.'],
+      metrics:[{num:'30K+',label_en:'Platform Visitors',label_ar:'زوار المنصة',color:'#22C55E'},{num:'4',label_en:'Team Members',label_ar:'أعضاء الفريق',color:'#29A0E0'},{num:'Free',label_en:'Always',label_ar:'دائماً',color:'#C8911A'}],
+      pillars:[],blocks:[]},
+  ],
+  awards:[
+    {id:'a1',medal:'🥉',title_en:'3rd Place Worldwide',title_ar:'المركز الثالث عالمياً',org_en:'Mars Mission Design Engineering 2025 — The Mars Society',org_ar:'تصميم المهمة إلى المريخ 2025 — The Mars Society',year:'2025'},
+    {id:'a2',medal:'🏅',title_en:'Honorable Mention',title_ar:'ذكر شرفي',org_en:'Moon Base 2050 International Innovation — Harbin Institute of Technology, China',org_ar:'مسابقة Moon Base 2050 — معهد هاربين للتكنولوجيا، الصين',year:'2024'},
+    {id:'a3',medal:'🌍',title_en:'5th Place Worldwide',title_ar:'المركز الخامس عالمياً',org_en:'Mars Mission Design Engineering 2023 — The Mars Society',org_ar:'تصميم المهمة إلى المريخ 2023 — The Mars Society',year:'2023'},
+    {id:'a4',medal:'🎖️',title_en:'Recognition — Damascus University President',title_ar:'تكريم رئيس جامعة دمشق',org_en:'Notable achievements in international scientific competitions and conference participation',org_ar:'لإنجازات بارزة في مسابقات علمية دولية والمشاركة في المؤتمرات',year:'2023'},
+    {id:'a5',medal:'🕊️',title_en:'Youth Public Speaking Representative',title_ar:'ممثل خطابي للشباب',org_en:'International Day of Non-Violence — Embassy of India in Damascus / Peace Organization',org_ar:'اليوم الدولي للاعنف — سفارة الهند بدمشق / منظمة السلام',year:'2023'},
+    {id:'a6',medal:'🏛️',title_en:"Dean's Appreciation — Faculty of Science",title_ar:'تكريم العميد — كلية العلوم',org_en:'Damascus University, for promotion of scientific exploration among Syrian youth',org_ar:'جامعة دمشق، لتعزيز الاستكشاف العلمي بين الشباب السوري',year:'2024'},
+  ],
+  volunteering:[
+    {id:'v1',title_en:'Coach & Volunteer — Syrian Space Science Team',title_ar:'مدرب ومتطوع — الفريق السوري لعلوم الفضاء',org_en:'Syrian Space Science & Modern Sciences',org_ar:'الفريق السوري لعلوم الفضاء والعلوم الحديثة',date_en:'May 2023 – Present',date_ar:'مايو 2023 – حتى الآن',bullets_en:['Train and mentor talented Syrian students for international space competitions.','Represented Syria in Mars Society and Moon Station 2050 competitions worldwide.'],bullets_ar:['تدريب وتأهيل طلاب سوريين موهوبين للمشاركة في مسابقات الفضاء الدولية.','مثّل سوريا في مسابقات Mars Society وMoon Station 2050 على مستوى العالم.']},
+    {id:'v2',title_en:'Volunteer — Peace Organization',title_ar:'متطوع — منظمة السلام',org_en:'Damascus',org_ar:'دمشق',date_en:'Apr 2023 – Present',date_ar:'أبريل 2023 – حتى الآن',bullets_en:['Peacebuilding, youth development, English language support and intercultural dialogues in post-conflict contexts.'],bullets_ar:['بناء السلام وتنمية الشباب، جلسات دعم اللغة الإنجليزية والحوارات بين الثقافات في سياقات ما بعد النزاع.']},
+    {id:'v3',title_en:'Volunteer — TEDx AlQassaa',title_ar:'متطوع — TEDx القصاع',org_en:'Damascus',org_ar:'دمشق',date_en:'May 2025 – Present',date_ar:'مايو 2025 – حتى الآن',bullets_en:[],bullets_ar:[]},
+    {id:'v4',title_en:'Volunteer — Syrian Research & Publication Society',title_ar:'متطوع — الجمعية السورية للبحث والنشر',org_en:'Damascus',org_ar:'دمشق',date_en:'Jul 2025 – Present',date_ar:'يوليو 2025 – حتى الآن',bullets_en:[],bullets_ar:[]},
+  ],
+  certs:[
+    {id:'c1',name_en:'Machine Learning Specialization',name_ar:'تخصص التعلم الآلي',org:'Coursera',year:'2024',desc_en:'Supervised, unsupervised & reinforcement learning; Python & NumPy',desc_ar:'التعلم المُشرَف وغير المُشرَف والتعزيزي؛ Python وNumPy'},
+    {id:'c2',name_en:'Deep Learning Specialization',name_ar:'تخصص التعلم العميق',org:'Coursera',year:'2025',desc_en:'CNNs, RNNs, LSTMs, Transformers, Computer Vision & NLP',desc_ar:'الشبكات العصبية التلافيفية والمتكررة، المحولات، رؤية الحاسب، NLP'},
+    {id:'c3',name_en:'TensorFlow Developer Specialization',name_ar:'تخصص TensorFlow للمطورين',org:'Coursera',year:'2025',desc_en:'Neural networks with TensorFlow & Keras for CV, NLP & time series',desc_ar:'شبكات عصبية بـ TensorFlow وKeras لرؤية الحاسب وNLP'},
+    {id:'c4',name_en:'Mobile App Development',name_ar:'تطوير تطبيقات الجوال',org:'Syrian Computer Society Training Center',year:'2025',desc_en:'Flutter & Dart with Firebase; responsive UI & API integration',desc_ar:'Flutter وDart مع Firebase؛ واجهات مستجيبة وتكامل API'},
+  ],
+  skills:[
+    {id:'sk1',title_en:'Programming Languages',title_ar:'لغات البرمجة',tags:['Python','C++','C#','JavaScript','HTML & CSS']},
+    {id:'sk2',title_en:'AI & Machine Learning',title_ar:'الذكاء الاصطناعي والتعلم الآلي',tags:['TensorFlow','PyTorch','Scikit-learn','OpenCV','NumPy','Pandas']},
+    {id:'sk3',title_en:'Mobile Development',title_ar:'تطوير تطبيقات الجوال',tags:['Flutter','Dart','Firebase','Bloc','Git/GitHub']},
+    {id:'sk4',title_en:'Data & Soft Skills',title_ar:'البيانات والمهارات الشخصية',tags:['MySQL','Excel','Problem Solving','Team Leadership','Academic Writing','Project Management']},
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE & STORAGE
+// ═══════════════════════════════════════════════════════
+let D = JSON.parse(JSON.stringify(DEFAULT_DATA));
+let isLoggedIn = false, isAr = false, taglineIdx = 0;
+
+function loadData(){
+  try{
+    const s = localStorage.getItem('anas_cv_data');
+    if(s) D = JSON.parse(s);
+  }catch(e){}
+}
+function saveData(){
+  localStorage.setItem('anas_cv_data', JSON.stringify(D));
+}
+function uid(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,6); }
+
+loadData();
+
+// ═══════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════
+document.getElementById('login-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('login-pass').focus(); });
+// Close modal when clicking outside the box
+document.getElementById('login-screen').addEventListener('click', function(e){ if(e.target===this) closeLoginModal(); });
+
+function openLoginModal(){
+  document.getElementById('login-screen').classList.add('open');
+  document.getElementById('login-error').textContent='';
+  setTimeout(()=>document.getElementById('login-user').focus(), 80);
+}
+function closeLoginModal(){
+  document.getElementById('login-screen').classList.remove('open');
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-error').textContent='';
+}
+
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  // Safe auth check — guard against missing/corrupt stored data
+  const auth = (D && D.auth) ? D.auth : DEFAULT_DATA.auth;
+  if(u === auth.user && p === auth.pass){
+    isLoggedIn = true;
+    closeLoginModal();
+    document.getElementById('cv-view').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    initDashboard();
+  } else {
+    const err = document.getElementById('login-error');
+    err.textContent = 'Incorrect username or password.';
+    ['login-user','login-pass'].forEach(id=>{
+      const el = document.getElementById(id);
+      el.classList.add('shake');
+      setTimeout(()=>el.classList.remove('shake'), 400);
+    });
+    setTimeout(()=>{ err.textContent=''; }, 2800);
+  }
+}
+function logout(){
+  isLoggedIn = false;
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('cv-view').style.display = 'block';
+  closeLoginModal();
+}
+function changePassword(){
+  const curr=document.getElementById('pwd-curr').value;
+  const nw=document.getElementById('pwd-new').value;
+  const conf=document.getElementById('pwd-confirm').value;
+  const errEl=document.getElementById('pwd-error');
+  if(curr!==D.auth.pass){errEl.textContent='Current password is wrong.';return}
+  if(nw.length<6){errEl.textContent='New password must be at least 6 characters.';return}
+  if(nw!==conf){errEl.textContent='Passwords do not match.';return}
+  D.auth.pass=nw;saveData();errEl.textContent='';
+  showSaved('pwd-saved');
+  ['pwd-curr','pwd-new','pwd-confirm'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════
+function initDashboard(){
+  renderProfileForm();
+  renderTaglineList();
+  renderPapersList();
+  renderProjectsList();
+  renderAwardsList();
+  renderVolunteeringList();
+  renderCertsList();
+  renderSkillsList();
+  updateBadges();
+}
+function showPage(name){
+  document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelector(`.nav-item[data-page="${name}"]`).classList.add('active');
+}
+function updateBadges(){
+  document.getElementById('badge-papers').textContent = D.papers.length;
+}
+function showSaved(id){
+  const el=document.getElementById(id);
+  el.style.display='flex';
+  setTimeout(()=>el.style.display='none',2200);
+}
+function switchToCV(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('cv-view').style.display='block';
+  document.getElementById('admin-btn').style.display='inline-flex';
+  renderCV();
+  startBgCanvas();
+}
+function switchToDash(){
+  document.getElementById('cv-view').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='anas_cv_data.json';a.click();
+}
+function resetToDefaults(){
+  if(confirm('Reset ALL data to defaults? This cannot be undone.')){
+    D=JSON.parse(JSON.stringify(DEFAULT_DATA));saveData();initDashboard();
+  }
+}
+
+// ─── Profile ───────────────────────────────────────────
+function renderProfileForm(){
+  const p=D.profile;
+  document.getElementById('p-name-en').value=p.name_en||'';
+  document.getElementById('p-name-ar').value=p.name_ar||'';
+  document.getElementById('p-sub-en').value=p.sub_en||'';
+  document.getElementById('p-sub-ar').value=p.sub_ar||'';
+  document.getElementById('p-email').value=p.email||'';
+  document.getElementById('p-phone').value=p.phone||'';
+  document.getElementById('p-loc-en').value=p.loc_en||'';
+  document.getElementById('p-loc-ar').value=p.loc_ar||'';
+  document.getElementById('p-linkedin').value=p.linkedin||'';
+  document.getElementById('p-instagram').value=p.instagram||'';
+}
+function saveProfile(){
+  D.profile.name_en=document.getElementById('p-name-en').value;
+  D.profile.name_ar=document.getElementById('p-name-ar').value;
+  D.profile.sub_en=document.getElementById('p-sub-en').value;
+  D.profile.sub_ar=document.getElementById('p-sub-ar').value;
+  D.profile.email=document.getElementById('p-email').value;
+  D.profile.phone=document.getElementById('p-phone').value;
+  D.profile.loc_en=document.getElementById('p-loc-en').value;
+  D.profile.loc_ar=document.getElementById('p-loc-ar').value;
+  D.profile.linkedin=document.getElementById('p-linkedin').value;
+  D.profile.instagram=document.getElementById('p-instagram').value;
+  saveData();showSaved('profile-saved');
+}
+
+// ─── Taglines ──────────────────────────────────────────
+function renderTaglineList(){
+  const list=document.getElementById('tagline-list');
+  list.innerHTML='';
+  D.taglines.forEach((t,i)=>{
+    list.innerHTML+=`<div class="tagline-item">
+      <div class="tagline-item-content">
+        <div class="tagline-en">"${t.en}"</div>
+        <div class="tagline-ar">"${t.ar}"</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="icon-btn edit" onclick="openTaglineModal(${i})" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="delTagline(${i})" title="Delete">🗑</button>
+        ${i>0?`<button class="icon-btn move-up" onclick="moveTagline(${i},-1)">▲</button>`:''}
+        ${i<D.taglines.length-1?`<button class="icon-btn move-down" onclick="moveTagline(${i},1)">▼</button>`:''}
+      </div>
+    </div>`;
+  });
+}
+function openTaglineModal(idx){
+  const t = idx!==undefined ? D.taglines[idx] : null;
+  document.getElementById('modal-title').textContent = t ? 'Edit Tagline' : 'Add Tagline';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-group"><label>English</label><input class="dash-input" id="tl-en" value="${t?t.en:''}" placeholder="e.g. From knowledge consumers to knowledge creators."></div>
+      <div class="field-group"><label>Arabic</label><input class="dash-input" id="tl-ar" value="${t?t.ar:''}" dir="rtl" placeholder="النص العربي"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveTagline(${idx})">Save</button>
+    </div>`;
+  openModal();
+}
+function saveTagline(idx){
+  const en=document.getElementById('tl-en').value.trim();
+  const ar=document.getElementById('tl-ar').value.trim();
+  if(!en)return;
+  if(idx!==undefined) D.taglines[idx]={en,ar};
+  else D.taglines.push({en,ar});
+  saveData();renderTaglineList();closeModal();
+}
+function delTagline(i){if(confirm('Delete this tagline?')){D.taglines.splice(i,1);saveData();renderTaglineList();}}
+function moveTagline(i,dir){
+  const j=i+dir;if(j<0||j>=D.taglines.length)return;
+  [D.taglines[i],D.taglines[j]]=[D.taglines[j],D.taglines[i]];
+  saveData();renderTaglineList();
+}
+
+// ─── Papers ────────────────────────────────────────────
+const DOMAINS={space:'🛸 Space',med:'🩺 Medical AI',ai:'🤖 AI',sec:'🔒 Cybersecurity',soc:'🌐 Society'};
+function renderPapersList(){
+  const el=document.getElementById('papers-list');
+  el.innerHTML='';
+  D.papers.forEach((p,i)=>{
+    el.innerHTML+=`<div class="item-card">
+      <div class="status-dot ${p.status==='published'?'dot-pub':'dot-rev'}"></div>
+      <div class="item-card-content">
+        <div class="item-card-title">${p.title_en}</div>
+        <div class="item-card-sub">${p.status==='published'?'✓ Published · '+p.journal:'⏳ Under Review'} · ${DOMAINS[p.domain]||p.domain} · ${p.year}</div>
+      </div>
+      <div class="item-card-actions">
+        <button class="icon-btn edit" onclick="openPaperModal(${i})" title="Edit">✏️</button>
+        <button class="icon-btn del" onclick="delPaper(${i})" title="Delete">🗑</button>
+      </div>
+    </div>`;
+  });
+  updateBadges();
+}
+function openPaperModal(idx){
+  const p = idx!==undefined ? D.papers[idx] : null;
+  document.getElementById('modal-title').textContent = p ? 'Edit Paper' : 'Add Paper';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-group"><label>Title (English)</label><textarea class="dash-input textarea" id="pm-ten" style="min-height:60px">${p?p.title_en:''}</textarea></div>
+      <div class="field-group"><label>العنوان (عربي)</label><textarea class="dash-input textarea" id="pm-tar" dir="rtl" style="min-height:60px">${p?p.title_ar:''}</textarea></div>
+      <div class="field-row">
+        <div class="field-group"><label>Status</label>
+          <select class="dash-input" id="pm-status" onchange="togglePubFields()">
+            <option value="review" ${p&&p.status==='review'?'selected':''}>Under Review</option>
+            <option value="published" ${p&&p.status==='published'?'selected':''}>Published</option>
+          </select></div>
+        <div class="field-group"><label>Year</label><input class="dash-input" id="pm-year" value="${p?p.year:'2025'}"></div>
+      </div>
+      <div id="pub-fields" style="display:${!p||p.status==='review'?'none':'flex'};flex-direction:column;gap:14px">
+        <div class="field-row">
+          <div class="field-group"><label>Journal Name</label><input class="dash-input" id="pm-journal" value="${p?p.journal:''}"></div>
+          <div class="field-group"><label>Publisher</label><input class="dash-input" id="pm-pub" value="${p?p.publisher:''}"></div>
+        </div>
+        <div class="field-group"><label>DOI / URL</label><input class="dash-input" id="pm-doi" value="${p?p.doi:''}" placeholder="https://doi.org/..."></div>
+      </div>
+      <div class="field-group"><label>Domain</label>
+        <div class="domain-pills" id="dom-pills">
+          ${Object.entries(DOMAINS).map(([k,v])=>`<span class="domain-pill ${p&&p.domain===k?'sel-'+k:''}" data-dom="${k}" onclick="selDomain('${k}')">${v}</span>`).join('')}
+        </div>
+        <input type="hidden" id="pm-domain" value="${p?p.domain:'med'}">
+      </div>
+      <div class="field-group"><label>Description (English)</label><textarea class="dash-input textarea" id="pm-den">${p?p.desc_en:''}</textarea></div>
+      <div class="field-group"><label>الوصف (عربي)</label><textarea class="dash-input textarea" id="pm-dar" dir="rtl">${p?p.desc_ar:''}</textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="savePaper(${idx})">Save Paper</button>
+    </div>`;
+  openModal();
+}
+function togglePubFields(){
+  document.getElementById('pub-fields').style.display=document.getElementById('pm-status').value==='published'?'flex':'none';
+}
+function selDomain(k){
+  document.getElementById('pm-domain').value=k;
+  document.querySelectorAll('#dom-pills .domain-pill').forEach(el=>{
+    el.className='domain-pill'+(el.dataset.dom===k?' sel-'+k:'');
+  });
+}
+function savePaper(idx){
+  const obj={
+    id: idx!==undefined ? D.papers[idx].id : uid(),
+    title_en:document.getElementById('pm-ten').value.trim(),
+    title_ar:document.getElementById('pm-tar').value.trim(),
+    status:document.getElementById('pm-status').value,
+    year:document.getElementById('pm-year').value,
+    journal:document.getElementById('pm-journal')?document.getElementById('pm-journal').value:'',
+    publisher:document.getElementById('pm-pub')?document.getElementById('pm-pub').value:'',
+    doi:document.getElementById('pm-doi')?document.getElementById('pm-doi').value:'',
+    domain:document.getElementById('pm-domain').value,
+    desc_en:document.getElementById('pm-den').value,
+    desc_ar:document.getElementById('pm-dar').value,
+  };
+  if(!obj.title_en)return;
+  if(idx!==undefined) D.papers[idx]=obj;
+  else D.papers.push(obj);
+  saveData();renderPapersList();closeModal();
+}
+function delPaper(i){if(confirm('Delete this paper?')){D.papers.splice(i,1);saveData();renderPapersList();}}
+
+// ─── Projects ─────────────────────────────────────────
+function renderProjectsList(){
+  const el=document.getElementById('projects-list');
+  el.innerHTML='';
+  D.projects.forEach((p,i)=>{
+    el.innerHTML+=`<div class="item-card">
+      <div class="item-card-content">
+        <div class="item-card-title">${p.name_en}</div>
+        <div class="item-card-sub">${p.org_en} · ${p.date_en}</div>
+      </div>
+      <div class="item-card-actions">
+        <button class="icon-btn edit" onclick="openProjectModal(${i})">✏️</button>
+        <button class="icon-btn del" onclick="delProject(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+}
+function bulletEditor(arr,idPrefix,lang){
+  return `<div class="bullet-list" id="${idPrefix}-list">
+    ${arr.map((b,i)=>`<div class="bullet-row">
+      <textarea data-idx="${i}">${b}</textarea>
+      <button class="icon-btn del" style="flex-shrink:0" onclick="delBulletRow('${idPrefix}',${i})">✕</button>
+    </div>`).join('')}
+  </div>
+  <button class="bullet-add" onclick="addBulletRow('${idPrefix}')">+ Add bullet</button>`;
+}
+function addBulletRow(prefix){
+  const list=document.getElementById(prefix+'-list');
+  const row=document.createElement('div');row.className='bullet-row';
+  const ta=document.createElement('textarea');ta.dataset.idx=list.children.length;
+  const btn=document.createElement('button');btn.className='icon-btn del';btn.style.flexShrink='0';
+  btn.textContent='✕';btn.onclick=()=>row.remove();
+  row.appendChild(ta);row.appendChild(btn);list.appendChild(row);
+}
+function delBulletRow(prefix,idx){
+  const list=document.getElementById(prefix+'-list');
+  if(list.children[idx])list.children[idx].remove();
+}
+function getBullets(prefix){
+  return [...document.getElementById(prefix+'-list').querySelectorAll('textarea')].map(t=>t.value.trim()).filter(Boolean);
+}
+function openProjectModal(idx){
+  const p=idx!==undefined?D.projects[idx]:null;
+  document.getElementById('modal-title').textContent=p?'Edit Project':'Add Project';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-row">
+        <div class="field-group"><label>Title (EN)</label><input class="dash-input" id="prm-ten" value="${p?p.name_en:''}"></div>
+        <div class="field-group"><label>العنوان (عربي)</label><input class="dash-input" id="prm-tar" dir="rtl" value="${p?p.name_ar:''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Org/Role (EN)</label><input class="dash-input" id="prm-oeg" value="${p?p.org_en:''}"></div>
+        <div class="field-group"><label>المنظمة (عربي)</label><input class="dash-input" id="prm-oar" dir="rtl" value="${p?p.org_ar:''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Date (EN)</label><input class="dash-input" id="prm-den" value="${p?p.date_en:''}"></div>
+        <div class="field-group"><label>التاريخ (عربي)</label><input class="dash-input" id="prm-dar" dir="rtl" value="${p?p.date_ar:''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Tagline (EN)</label><input class="dash-input" id="prm-tlen" value="${p?p.tagline_en:''}" placeholder="Optional quote"></div>
+        <div class="field-group"><label>الشعار (عربي)</label><input class="dash-input" id="prm-tlar" dir="rtl" value="${p?p.tagline_ar:''}"></div>
+      </div>
+      <div class="field-group"><label>Bullets (English)</label>${bulletEditor(p?p.bullets_en:[],'ben','en')}</div>
+      <div class="field-group"><label>النقاط (عربي)</label>${bulletEditor(p?p.bullets_ar:[],'bar','ar')}</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProject(${idx})">Save Project</button>
+    </div>`;
+  openModal();
+}
+function saveProject(idx){
+  const obj={
+    id:idx!==undefined?D.projects[idx].id:uid(),
+    name_en:document.getElementById('prm-ten').value.trim(),
+    name_ar:document.getElementById('prm-tar').value.trim(),
+    org_en:document.getElementById('prm-oeg').value.trim(),
+    org_ar:document.getElementById('prm-oar').value.trim(),
+    date_en:document.getElementById('prm-den').value.trim(),
+    date_ar:document.getElementById('prm-dar').value.trim(),
+    tagline_en:document.getElementById('prm-tlen').value.trim(),
+    tagline_ar:document.getElementById('prm-tlar').value.trim(),
+    bullets_en:getBullets('ben'),
+    bullets_ar:getBullets('bar'),
+    metrics:idx!==undefined?D.projects[idx].metrics||[]:[],
+    pillars:idx!==undefined?D.projects[idx].pillars||[]:[],
+    blocks:idx!==undefined?D.projects[idx].blocks||[]:[],
+  };
+  if(!obj.name_en)return;
+  if(idx!==undefined)D.projects[idx]=obj;else D.projects.push(obj);
+  saveData();renderProjectsList();closeModal();
+}
+function delProject(i){if(confirm('Delete this project?')){D.projects.splice(i,1);saveData();renderProjectsList();}}
+
+// ─── Awards ────────────────────────────────────────────
+function renderAwardsList(){
+  const el=document.getElementById('awards-list');
+  el.innerHTML='';
+  D.awards.forEach((a,i)=>{
+    el.innerHTML+=`<div class="item-card">
+      <div style="font-size:1.4rem;flex-shrink:0">${a.medal}</div>
+      <div class="item-card-content">
+        <div class="item-card-title">${a.title_en}</div>
+        <div class="item-card-sub">${a.org_en} · ${a.year}</div>
+      </div>
+      <div class="item-card-actions">
+        <button class="icon-btn edit" onclick="openAwardModal(${i})">✏️</button>
+        <button class="icon-btn del" onclick="delAward(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+}
+function openAwardModal(idx){
+  const a=idx!==undefined?D.awards[idx]:null;
+  document.getElementById('modal-title').textContent=a?'Edit Award':'Add Award';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-row">
+        <div class="field-group"><label>Medal Emoji</label><input class="dash-input" id="aw-medal" value="${a?a.medal:'🏅'}" style="font-size:1.2rem"></div>
+        <div class="field-group"><label>Year</label><input class="dash-input" id="aw-year" value="${a?a.year:'2025'}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Title (EN)</label><input class="dash-input" id="aw-ten" value="${a?a.title_en:''}"></div>
+        <div class="field-group"><label>العنوان (عربي)</label><input class="dash-input" id="aw-tar" dir="rtl" value="${a?a.title_ar:''}"></div>
+      </div>
+      <div class="field-group"><label>Organization (EN)</label><textarea class="dash-input textarea" style="min-height:56px" id="aw-oen">${a?a.org_en:''}</textarea></div>
+      <div class="field-group"><label>المنظمة (عربي)</label><textarea class="dash-input textarea" style="min-height:56px" id="aw-oar" dir="rtl">${a?a.org_ar:''}</textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveAward(${idx})">Save Award</button>
+    </div>`;
+  openModal();
+}
+function saveAward(idx){
+  const obj={id:idx!==undefined?D.awards[idx].id:uid(),medal:document.getElementById('aw-medal').value,year:document.getElementById('aw-year').value,title_en:document.getElementById('aw-ten').value.trim(),title_ar:document.getElementById('aw-tar').value.trim(),org_en:document.getElementById('aw-oen').value.trim(),org_ar:document.getElementById('aw-oar').value.trim()};
+  if(!obj.title_en)return;
+  if(idx!==undefined)D.awards[idx]=obj;else D.awards.push(obj);
+  saveData();renderAwardsList();closeModal();
+}
+function delAward(i){if(confirm('Delete this award?')){D.awards.splice(i,1);saveData();renderAwardsList();}}
+
+// ─── Volunteering ──────────────────────────────────────
+function renderVolunteeringList(){
+  const el=document.getElementById('volunteering-list');
+  el.innerHTML='';
+  D.volunteering.forEach((v,i)=>{
+    el.innerHTML+=`<div class="item-card">
+      <div class="item-card-content">
+        <div class="item-card-title">${v.title_en}</div>
+        <div class="item-card-sub">${v.org_en} · ${v.date_en}</div>
+      </div>
+      <div class="item-card-actions">
+        <button class="icon-btn edit" onclick="openVolunteerModal(${i})">✏️</button>
+        <button class="icon-btn del" onclick="delVolunteer(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+}
+function openVolunteerModal(idx){
+  const v=idx!==undefined?D.volunteering[idx]:null;
+  document.getElementById('modal-title').textContent=v?'Edit Volunteer Role':'Add Volunteer Role';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-row">
+        <div class="field-group"><label>Title (EN)</label><input class="dash-input" id="vm-ten" value="${v?v.title_en:''}"></div>
+        <div class="field-group"><label>العنوان (عربي)</label><input class="dash-input" id="vm-tar" dir="rtl" value="${v?v.title_ar:''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Org (EN)</label><input class="dash-input" id="vm-oen" value="${v?v.org_en:''}"></div>
+        <div class="field-group"><label>المنظمة (عربي)</label><input class="dash-input" id="vm-oar" dir="rtl" value="${v?v.org_ar:''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Date (EN)</label><input class="dash-input" id="vm-den" value="${v?v.date_en:''}"></div>
+        <div class="field-group"><label>التاريخ (عربي)</label><input class="dash-input" id="vm-dar" dir="rtl" value="${v?v.date_ar:''}"></div>
+      </div>
+      <div class="field-group"><label>Bullets (English)</label>${bulletEditor(v?v.bullets_en:[],'vben','en')}</div>
+      <div class="field-group"><label>النقاط (عربي)</label>${bulletEditor(v?v.bullets_ar:[],'vbar','ar')}</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveVolunteer(${idx})">Save</button>
+    </div>`;
+  openModal();
+}
+function saveVolunteer(idx){
+  const obj={id:idx!==undefined?D.volunteering[idx].id:uid(),title_en:document.getElementById('vm-ten').value.trim(),title_ar:document.getElementById('vm-tar').value.trim(),org_en:document.getElementById('vm-oen').value.trim(),org_ar:document.getElementById('vm-oar').value.trim(),date_en:document.getElementById('vm-den').value.trim(),date_ar:document.getElementById('vm-dar').value.trim(),bullets_en:getBullets('vben'),bullets_ar:getBullets('vbar')};
+  if(!obj.title_en)return;
+  if(idx!==undefined)D.volunteering[idx]=obj;else D.volunteering.push(obj);
+  saveData();renderVolunteeringList();closeModal();
+}
+function delVolunteer(i){if(confirm('Delete this role?')){D.volunteering.splice(i,1);saveData();renderVolunteeringList();}}
+
+// ─── Certs ─────────────────────────────────────────────
+function renderCertsList(){
+  const el=document.getElementById('certs-list');
+  el.innerHTML='';
+  D.certs.forEach((c,i)=>{
+    el.innerHTML+=`<div class="item-card">
+      <div class="item-card-content">
+        <div class="item-card-title">${c.name_en}</div>
+        <div class="item-card-sub">${c.org} · ${c.year}</div>
+      </div>
+      <div class="item-card-actions">
+        <button class="icon-btn edit" onclick="openCertModal(${i})">✏️</button>
+        <button class="icon-btn del" onclick="delCert(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+}
+function openCertModal(idx){
+  const c=idx!==undefined?D.certs[idx]:null;
+  document.getElementById('modal-title').textContent=c?'Edit Certification':'Add Certification';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-row">
+        <div class="field-group"><label>Name (EN)</label><input class="dash-input" id="cm-nen" value="${c?c.name_en:''}"></div>
+        <div class="field-group"><label>الاسم (عربي)</label><input class="dash-input" id="cm-nar" dir="rtl" value="${c?c.name_ar:''}"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Organization</label><input class="dash-input" id="cm-org" value="${c?c.org:''}"></div>
+        <div class="field-group"><label>Year</label><input class="dash-input" id="cm-yr" value="${c?c.year:'2025'}"></div>
+      </div>
+      <div class="field-group"><label>Description (EN)</label><textarea class="dash-input textarea" id="cm-den">${c?c.desc_en:''}</textarea></div>
+      <div class="field-group"><label>الوصف (عربي)</label><textarea class="dash-input textarea" id="cm-dar" dir="rtl">${c?c.desc_ar:''}</textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveCert(${idx})">Save</button>
+    </div>`;
+  openModal();
+}
+function saveCert(idx){
+  const obj={id:idx!==undefined?D.certs[idx].id:uid(),name_en:document.getElementById('cm-nen').value.trim(),name_ar:document.getElementById('cm-nar').value.trim(),org:document.getElementById('cm-org').value.trim(),year:document.getElementById('cm-yr').value,desc_en:document.getElementById('cm-den').value.trim(),desc_ar:document.getElementById('cm-dar').value.trim()};
+  if(!obj.name_en)return;
+  if(idx!==undefined)D.certs[idx]=obj;else D.certs.push(obj);
+  saveData();renderCertsList();closeModal();
+}
+function delCert(i){if(confirm('Delete this cert?')){D.certs.splice(i,1);saveData();renderCertsList();}}
+
+// ─── Skills ────────────────────────────────────────────
+function renderSkillsList(){
+  const el=document.getElementById('skills-list');
+  el.innerHTML='';
+  D.skills.forEach((s,i)=>{
+    el.innerHTML+=`<div class="item-card">
+      <div class="item-card-content">
+        <div class="item-card-title">${s.title_en}</div>
+        <div class="item-card-sub">${s.tags.join(' · ')}</div>
+      </div>
+      <div class="item-card-actions">
+        <button class="icon-btn edit" onclick="openSkillModal(${i})">✏️</button>
+        <button class="icon-btn del" onclick="delSkill(${i})">🗑</button>
+      </div>
+    </div>`;
+  });
+}
+function openSkillModal(idx){
+  const s=idx!==undefined?D.skills[idx]:null;
+  document.getElementById('modal-title').textContent=s?'Edit Skill Group':'Add Skill Group';
+  document.getElementById('modal-body').innerHTML=`
+    <div class="modal-fields">
+      <div class="field-row">
+        <div class="field-group"><label>Group Title (EN)</label><input class="dash-input" id="skm-ten" value="${s?s.title_en:''}"></div>
+        <div class="field-group"><label>العنوان (عربي)</label><input class="dash-input" id="skm-tar" dir="rtl" value="${s?s.title_ar:''}"></div>
+      </div>
+      <div class="field-group"><label>Tags (comma-separated)</label><input class="dash-input" id="skm-tags" value="${s?s.tags.join(', '):''}"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveSkill(${idx})">Save</button>
+    </div>`;
+  openModal();
+}
+function saveSkill(idx){
+  const obj={id:idx!==undefined?D.skills[idx].id:uid(),title_en:document.getElementById('skm-ten').value.trim(),title_ar:document.getElementById('skm-tar').value.trim(),tags:document.getElementById('skm-tags').value.split(',').map(t=>t.trim()).filter(Boolean)};
+  if(!obj.title_en)return;
+  if(idx!==undefined)D.skills[idx]=obj;else D.skills.push(obj);
+  saveData();renderSkillsList();closeModal();
+}
+function delSkill(i){if(confirm('Delete this skill group?')){D.skills.splice(i,1);saveData();renderSkillsList();}}
+
+// ─── Modal helpers ─────────────────────────────────────
+function openModal(){document.getElementById('modal-overlay').classList.add('open')}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open')}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal()}
+
+// ═══════════════════════════════════════════════════════
+// PUBLIC CV RENDER
+// ═══════════════════════════════════════════════════════
+const hl = (en,ar) => isAr ? ar : en;
+
+function renderCV(){
+  const p=D.profile;
+  document.getElementById('cv-name').textContent=hl(p.name_en,p.name_ar);
+  document.getElementById('cv-sub').textContent=hl(p.sub_en,p.sub_ar);
+  renderTaglineCycle();
+
+  // Hero tags
+  const tags=[
+    {en:'Deep Learning',ar:'التعلم العميق'},{en:'Computer Vision',ar:'رؤية الحاسب'},
+    {en:'Healthcare AI',ar:'الذكاء الاصطناعي الصحي'},{en:'Space Research',ar:'أبحاث الفضاء'},
+    {en:D.papers.length+' Papers',ar:D.papers.length+' بحثاً'},
+    {en:'Published · Springer Nature',ar:'منشور · Springer Nature'},
+  ];
+  document.getElementById('cv-hero-tags').innerHTML=tags.map(t=>`<span class="hero-tag">${hl(t.en,t.ar)}</span>`).join('');
+
+  // Contacts
+  document.getElementById('cv-contacts').innerHTML=`
+    <a class="contact-pill" href="mailto:${p.email}"><span>✉️</span><span>${p.email}</span></a>
+    <a class="contact-pill" href="tel:${p.phone}"><span>📱</span><span>${p.phone}</span></a>
+    <a class="contact-pill" href="${p.linkedin}" target="_blank"><span>💼</span><span>LinkedIn</span></a>
+    <a class="contact-pill" href="${p.instagram}" target="_blank"><span>📸</span><span>${p.instagram.replace('https://www.instagram.com/','@')}</span></a>`;
+
+  // Stats
+  const pubCount=D.papers.filter(x=>x.status==='published').length;
+  const visitorsProject=D.projects.find(p=>p.name_en.includes('EDGLISH'));
+  document.getElementById('cv-stats').innerHTML=[
+    {num:pubCount,label:{en:'Published Q1',ar:'بحث Q1 منشور'}},
+    {num:D.papers.length,label:{en:'Total Papers',ar:'إجمالي الأبحاث'}},
+    {num:'3rd',label:{en:'Mars 2025 Global',ar:'مريخ 2025 عالمياً'}},
+    {num:D.projects.length,label:{en:'Ventures Led',ar:'مشاريع تأسيسية'}},
+    {num:'30K+',label:{en:'Edglish Visitors',ar:'زوار Edglish'}},
+  ].map(s=>`<div class="stat"><div class="stat-num">${s.num}</div><div class="stat-label">${hl(s.label.en,s.label.ar)}</div></div>`).join('');
+
+  // Sections
+  let html='';
+  html+=renderEducation();
+  html+=renderResearch();
+  html+=renderProjects();
+  html+=renderAwards();
+  html+=renderVolunteering();
+  html+=renderCerts();
+  html+=renderSkillsCV();
+  html+=renderLanguages();
+  document.getElementById('cv-sections').innerHTML=html;
+  document.getElementById('cv-foot-text').textContent=hl(p.name_en,p.name_ar)+' · '+hl(p.loc_en,p.loc_ar)+' · '+p.email;
+  attachFilterListeners();
+  attachNavObserver();
+  initFadeAnim();
+}
+
+function renderEducation(){
+  return cvSection('education','🎓',{en:'Education',ar:'التعليم'},[
+    `<div class="cv-card"><div class="cv-top"><div><div class="cv-title">${hl('Information Technology Engineering','هندسة تقنية المعلومات')}</div><div class="cv-org">${hl('Syrian Virtual University · Damascus','الجامعة الافتراضية السورية · دمشق')}</div></div><span class="cv-date">${hl('2024 – Present','2024 – حتى الآن')}</span></div><p class="cv-desc">${hl('Specializing in AI, machine learning, and application development.','تخصص في الذكاء الاصطناعي والتعلم الآلي وتطوير التطبيقات.')}</p></div>`,
+    `<div class="cv-card"><div class="cv-top"><div><div class="cv-title">${hl('Syrian Baccalaureate — 96.31/100','الشهادة الثانوية السورية — 96.31/100')}</div><div class="cv-org">${hl('Jawdat al-Hashemi School · Damascus','مدرسة جودت الهاشمي · دمشق')}</div></div><span class="cv-date">2022 – 2023</span></div><p class="cv-desc">${hl('Graduated with a distinguished score of 96.31/100 — ranked among top achievers nationally.','تخرج بمعدل متميز 96.31/100 — ضمن المتفوقين على المستوى الوطني.')}</p></div>`,
+  ].join(''));
+}
+
+function renderResearch(){
+  const pub=D.papers.filter(p=>p.status==='published');
+  const rev=D.papers.filter(p=>p.status!=='published');
+  let html='';
+  pub.forEach(p=>{
+    html+=`<div class="pub-card">
+      <div><span class="pub-badge">🏆 ${p.publisher||'Published'}</span><span class="status-badge s-published"><span class="dot-pub" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:4px"></span>${hl('Published','منشور')} ${p.year}</span></div>
+      <div class="pub-title">${isAr?p.title_ar:p.title_en}</div>
+      <div class="pub-meta"><span>📘 <strong>${p.journal}</strong></span></div>
+      ${(isAr?p.desc_ar:p.desc_en)?`<ul>${(isAr?p.desc_ar:p.desc_en).split('\n').filter(Boolean).map(b=>`<li>${b}</li>`).join('')}</ul>`:''}
+      ${p.doi?`<br><a class="pub-link" href="${p.doi}" target="_blank">🔗 ${p.doi.replace('https://doi.org/','doi.org/')} ↗</a>`:''}
+    </div>`;
+  });
+  const domLabels={space:{en:'🛸 Space',ar:'🛸 الفضاء'},med:{en:'🩺 Medical AI',ar:'🩺 الذكاء الطبي'},ai:{en:'🤖 AI',ar:'🤖 الذكاء'},sec:{en:'🔒 Cybersecurity',ar:'🔒 الأمن'},soc:{en:'🌐 Society',ar:'🌐 المجتمع'}};
+  const domClass={space:'dom-space',med:'dom-med',ai:'dom-ai',sec:'dom-sec',soc:'dom-soc'};
+  html+=`<div style="margin:18px 0 10px"><p style="font-size:.78rem;color:var(--muted);margin-bottom:11px">${D.papers.length} ${hl('papers total','بحثاً')} — ${pub.length} ${hl('published','منشور')}, ${rev.length} ${hl('under review / in submission','قيد المراجعة')}</p>
+    <div class="research-filters">
+      <button class="r-filter rall ractive" data-rcat="all">${hl('All ('+rev.length+')','الكل ('+rev.length+')')}</button>
+      ${Object.entries(domLabels).map(([k,v])=>`<button class="r-filter" data-rcat="${k}">${hl(v.en,v.ar)}</button>`).join('')}
+    </div></div>
+  <div class="papers-grid" id="papers-grid-cv">
+    ${rev.map(p=>{
+      const dCls=domClass[p.domain]||'dom-ai';
+      const dLbl=domLabels[p.domain]?hl(domLabels[p.domain].en,domLabels[p.domain].ar):p.domain;
+      return `<div class="paper-card" data-cat="${p.domain}">
+        <div class="paper-top">
+          <div class="paper-title">${isAr?p.title_ar:p.title_en}</div>
+          <div class="paper-cat-dot" style="background:${p.domain==='space'?'var(--cyan)':p.domain==='med'?'#F87171':p.domain==='sec'?'var(--orange)':p.domain==='soc'?'var(--green)':'var(--purple)'}"></div>
+        </div>
+        ${(isAr?p.desc_ar:p.desc_en)?`<p class="paper-desc">${isAr?p.desc_ar:p.desc_en}</p>`:''}
+        <div class="paper-meta-row">
+          <span class="paper-domain ${dCls}">${dLbl}</span>
+          <span class="paper-status-lbl"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--orange);animation:blink 1.8s infinite;margin-right:4px"></span>${hl('Under Review','قيد المراجعة')}</span>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+  return cvSection('research','🔬',{en:'Research & Publications',ar:'الأبحاث والمنشورات'},html,true);
+}
+
+function renderProjects(){
+  let cards='';
+  D.projects.forEach(p=>{
+    let inner=`<div class="cv-top"><div><div class="cv-title">${hl(p.name_en,p.name_ar)}</div><div class="cv-org">${hl(p.org_en,p.org_ar)}</div></div><span class="cv-date">${hl(p.date_en,p.date_ar)}</span></div>`;
+    if(hl(p.tagline_en,p.tagline_ar)) inner+=`<div class="tagline-callout">${hl(p.tagline_en,p.tagline_ar)}</div>`;
+    if(p.metrics&&p.metrics.length) inner+=`<div class="metrics-row">${p.metrics.map(m=>`<div class="metric-badge" style="background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2)"><span class="metric-num" style="color:${m.color||'var(--green)'}">${m.num}</span><span class="metric-label">${hl(m.label_en,m.label_ar)}</span></div>`).join('')}</div>`;
+    if(p.pillars&&p.pillars.length) inner+=`<div style="font-size:.7rem;color:var(--muted);margin:12px 0 7px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">${hl('Three Pillars','المحاور الثلاثة')}</div><div class="pillars-grid">${p.pillars.map(pl=>`<div class="pillar"><div class="pillar-icon">${pl.icon}</div><div class="pillar-name">${hl(pl.name_en,pl.name_ar)}</div><div class="pillar-desc">${hl(pl.desc_en,pl.desc_ar)}</div></div>`).join('')}</div>`;
+    if(p.blocks&&p.blocks.length) inner+=`<div style="font-size:.7rem;color:var(--muted);margin:12px 0 7px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">${hl('Operational Blocks','الوحدات التشغيلية')}</div><div class="blocks-grid">${p.blocks.map(b=>{const parts=b.split(' ');const ico=parts[0];const nm=parts.slice(1).join(' ');return`<div class="block-chip"><span class="bicon">${ico}</span>${nm}</div>`}).join('')}</div>`;
+    const bullets=hl(p.bullets_en,p.bullets_ar);
+    if(bullets&&bullets.length) inner+=`<ul>${bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+    cards+=`<div class="cv-card">${inner}</div>`;
+  });
+  return cvSection('projects','🚀',{en:'Ventures & Initiatives',ar:'المشاريع والمبادرات'},cards,true);
+}
+
+function renderAwards(){
+  let html=`<div class="awards-grid">`;
+  D.awards.forEach(a=>{
+    html+=`<div class="award-card"><div class="award-year">${a.year}</div><div class="award-medal">${a.medal}</div><div class="award-title">${hl(a.title_en,a.title_ar)}</div><div class="award-org">${hl(a.org_en,a.org_ar)}</div></div>`;
+  });
+  html+=`</div>`;
+  return cvSection('awards','🏆',{en:'Honours & Awards',ar:'الجوائز والتكريمات'},html,true);
+}
+
+function renderVolunteering(){
+  let cards='';
+  D.volunteering.forEach(v=>{
+    const bullets=hl(v.bullets_en,v.bullets_ar);
+    cards+=`<div class="cv-card"><div class="cv-top"><div><div class="cv-title">${hl(v.title_en,v.title_ar)}</div><div class="cv-org">${hl(v.org_en,v.org_ar)}</div></div><span class="cv-date">${hl(v.date_en,v.date_ar)}</span></div>${bullets&&bullets.length?'<ul>'+bullets.map(b=>`<li>${b}</li>`).join('')+'</ul>':''}</div>`;
+  });
+  return cvSection('volunteering','🤝',{en:'Volunteering',ar:'التطوع والخدمة المجتمعية'},cards);
+}
+
+function renderCerts(){
+  let html=`<div class="cert-grid">`;
+  D.certs.forEach(c=>{
+    html+=`<div class="cert-card"><span class="cert-year">${c.year}</span><div class="cert-name">${hl(c.name_en,c.name_ar)}</div><div class="cert-org">${c.org}</div><div class="cert-desc">${hl(c.desc_en,c.desc_ar)}</div></div>`;
+  });
+  html+=`</div>`;
+  return cvSection('certs','📜',{en:'Certifications',ar:'الشهادات والتدريبات'},html,true);
+}
+
+function renderSkillsCV(){
+  let html=`<div class="skills-grid">`;
+  D.skills.forEach(s=>{
+    html+=`<div class="skill-group"><div class="skill-group-title">${hl(s.title_en,s.title_ar)}</div><div class="skill-tags">${s.tags.map(t=>`<span class="skill-tag">${t}</span>`).join('')}</div></div>`;
+  });
+  html+=`</div>`;
+  return cvSection('cv-skills','⚡',{en:'Technical Skills',ar:'المهارات التقنية'},html,true);
+}
+
+function renderLanguages(){
+  const langs=[
+    {name:{en:'Arabic (Native)',ar:'العربية (الأم)'},scores:['C2','C2','C2','C2','C2'],cls:'lc1'},
+    {name:{en:'English',ar:'الإنجليزية'},scores:['C1','C1','C1','C1','C1'],cls:'lc1'},
+    {name:{en:'French',ar:'الفرنسية'},scores:['B2','B2','B1','B1','B1'],cls:'lb'},
+    {name:{en:'Spanish',ar:'الإسبانية'},scores:['A1','A1','A1','A1','A1'],cls:'la'},
+  ];
+  const headers=[{en:'Language',ar:'اللغة'},{en:'Listening',ar:'الاستماع'},{en:'Reading',ar:'القراءة'},{en:'Speaking',ar:'التحدث'},{en:'Interaction',ar:'التفاعل'},{en:'Writing',ar:'الكتابة'}];
+  let html=`<table class="lang-table"><thead><tr>${headers.map(h=>`<th>${hl(h.en,h.ar)}</th>`).join('')}</tr></thead><tbody>`;
+  langs.forEach(l=>{ html+=`<tr><td>${hl(l.name.en,l.name.ar)}</td>${l.scores.map(s=>`<td class="${l.cls}">${s}</td>`).join('')}</tr>`; });
+  html+=`</tbody></table>`;
+  return cvSection('languages','🌐',{en:'Languages',ar:'اللغات'},html,true);
+}
+
+function cvSection(id,icon,title,content,raw){
+  return `<section class="cv-section" id="${id}">
+    <div class="sec-header">
+      <div class="sec-icon">${icon}</div>
+      <h2 class="sec-title">${hl(title.en,title.ar)}</h2>
+      <div class="sec-line"></div>
+    </div>
+    ${raw?content:`<div>${content}</div>`}
+  </section>`;
+}
+
+// ─── Filter ────────────────────────────────────────────
+function attachFilterListeners(){
+  document.querySelectorAll('.r-filter').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const cat=btn.dataset.rcat;
+      document.querySelectorAll('.r-filter').forEach(b=>b.classList.remove('ractive'));
+      btn.classList.add('ractive');
+      document.querySelectorAll('#papers-grid-cv .paper-card').forEach(c=>{
+        c.classList.toggle('hidden', cat!=='all' && !c.dataset.cat.includes(cat));
+      });
+    });
+  });
+}
+
+// ─── Tagline cycle ────────────────────────────────────
+let taglineTimer;
+function renderTaglineCycle(){
+  if(D.taglines.length===0){document.getElementById('cv-tagline').textContent='';return}
+  clearInterval(taglineTimer);
+  taglineIdx=0;
+  updateTagline();
+  taglineTimer=setInterval(()=>{taglineIdx=(taglineIdx+1)%D.taglines.length;updateTagline();},4500);
+}
+function updateTagline(){
+  const el=document.getElementById('cv-tagline');
+  if(!el||!D.taglines.length)return;
+  el.style.opacity=0;
+  setTimeout(()=>{el.textContent='"'+(hl(D.taglines[taglineIdx].en,D.taglines[taglineIdx].ar))+'"';el.style.opacity=1;},300);
+}
+
+// ─── Nav observer ─────────────────────────────────────
+function attachNavObserver(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id=e.target.id;
+        document.querySelectorAll('.nav-pill').forEach(p=>p.classList.toggle('active',p.dataset.target===id));
+      }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.cv-section[id]').forEach(s=>obs.observe(s));
+}
+
+// ─── Fade anim ─────────────────────────────────────────
+function initFadeAnim(){
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='translateY(0)';obs.unobserve(e.target);}
+    });
+  },{threshold:.06});
+  document.querySelectorAll('.cv-card,.pub-card,.paper-card,.award-card,.cert-card,.cv-section').forEach((el,i)=>{
+    el.style.opacity=0;el.style.transform='translateY(16px)';
+    el.style.transition=`opacity .45s ease ${(i%10)*35}ms, transform .45s ease ${(i%10)*35}ms`;
+    obs.observe(el);
+  });
+}
+
+// ─── Scroll nav ───────────────────────────────────────
+function cvScroll(id){
+  const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ─── Language toggle ──────────────────────────────────
+function toggleLang(){
+  isAr=!isAr;
+  const btn=document.getElementById('lang-btn'),html=document.documentElement;
+  if(isAr){html.lang='ar';html.dir='rtl';document.body.classList.add('ar');btn.textContent='English';}
+  else{html.lang='en';html.dir='ltr';document.body.classList.remove('ar');btn.textContent='العربية';}
+  renderCV();
+}
+
+// ─── BG Canvas ────────────────────────────────────────
+function startBgCanvas(){
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function r(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  r();window.addEventListener('resize',r);
+  class P{constructor(){this.reset()}reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.3+.3;this.vx=(Math.random()-.5)*.22;this.vy=(Math.random()-.5)*.22;this.a=Math.random()*.3+.07;this.c=Math.random()>.55?'#1A5C96':Math.random()>.5?'#C8911A':'#00C9D4'}update(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset()}draw(){ctx.save();ctx.globalAlpha=this.a;ctx.fillStyle=this.c;ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();ctx.restore()}}
+  for(let i=0;i<130;i++)pts.push(new P());
+  let animId;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#06101C');g.addColorStop(.5,'#08192E');g.addColorStop(1,'#06101C');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.lineWidth=.4;
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<85){ctx.beginPath();ctx.globalAlpha=.1*(1-d/85);ctx.strokeStyle='#1A5C96';ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}}
+    ctx.globalAlpha=1;pts.forEach(p=>{p.update();p.draw()});
+    animId=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ─── cv tagline transition ────────────────────────────
+document.getElementById('cv-tagline').style.transition='opacity .3s';
+
+// ═══════════════════════════════════════════════════════
+// BOOT — show CV directly, no login required for visitors
+// ═══════════════════════════════════════════════════════
+(function boot(){
+  // CV is visible by default; dashboard and login are hidden
+  document.getElementById('login-screen').classList.remove('open');
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('cv-view').style.display = 'block';
+  document.getElementById('admin-btn').style.display = 'none';
+  renderCV();
+  startBgCanvas();
+})();
+</script>
+</body>
+</html>
